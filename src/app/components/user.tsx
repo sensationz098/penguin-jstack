@@ -5,6 +5,7 @@ import { client } from "@/lib/client";
 import { Button } from "@/components";
 import { FormEvent } from "react";
 import { DeletePost } from "./DeletePost";
+import { revalidatePath } from "next/cache";
 
 const User = () => {
   const queryClient = useQueryClient();
@@ -20,10 +21,10 @@ const User = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      revalidatePath("/");
     },
   });
 
-  console.log("mutationData", mutationData);
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {

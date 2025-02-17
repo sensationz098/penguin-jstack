@@ -1,6 +1,7 @@
 import { Button } from "@/components";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/client";
+import { revalidatePath } from "next/cache";
 
 export const DeletePost = ({ id }: { id: string }) => {
   const queryClient = useQueryClient();
@@ -12,10 +13,10 @@ export const DeletePost = ({ id }: { id: string }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      revalidatePath("/");
     },
   });
 
-  console.log("server", data?.message);
   return (
     <Button variant={"destructive"} onClick={() => mutate(id)}>
       {isPending ? "Deleting..." : "Delete"}
